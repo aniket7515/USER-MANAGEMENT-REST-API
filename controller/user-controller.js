@@ -69,12 +69,26 @@ const deleteUser= async(req,res,next)=>{
     }
     return res.status(200).json({message:"Succesfully Deleted"})
 }
+const getUserById= async(req,res,next)=>{
+    const id=req.params.id;
+    let user;
+    try {
+        user=await User.findById(id);
+    } catch (error) {
+        return next(error)
+    }
+    if(!user){
+       return req.status(404).json({message:"Unable to find user with this id"})
+    }
+    return res.status(200).json({user})
+}
 
 
 exports.getAllUsers=getAllUsers;
 exports.addUser=addUser;
 exports.updateUser =updateUser;
 exports.deleteUser=deleteUser;
+exports.getUserById=getUserById;
 
 // status 422 means unprocessable entity
 // status 201 used when something is siccesfully addedd
