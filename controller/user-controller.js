@@ -15,5 +15,34 @@ const getAllUsers= async(req,res,next)=>{
 }
 
 
+const addUser = async(req,res,next)=>{
+    const {name,email,password} = req.body;
+    if(!name && name.trim()=="" && !email && email.trim()==="" && !password && password.length<6){
+        return res.status(422).json({message:"Invalid Data"});
+    }
+    let user;
+    try{
+        user=new User({
+            name,
+            email,
+            password,
+        })
+        user=await user.save()  // saving the user record in database
+    }catch(err){
+        return next(err);
+    }
+    if(!user){
+        return res.status(500).json({message:"Unable to save user"})
+    }
+    return res.status(201).json({user})
+}
+
+
+
 
 exports.getAllUsers=getAllUsers;
+exports.addUser=addUser;
+
+
+// status 422 means unprocessable entity
+// status 201 used when something is siccesfully addedd
